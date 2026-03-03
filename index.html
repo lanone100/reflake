@@ -3,252 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>回收料計算器 | Bộ Máy Tính Tỷ Lệ</title>
+    <title>回收料計算器 | Bộ Máy Tính</title>
     <style>
         :root {
-            /* 豐富色彩定義 */
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            --gradient-accent: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            --card-shadow: 0 15px 35px rgba(0,0,0,0.15);
-            --bg-soft: #f8f9fc;
-            --text-dark: #2d3436;
+            --primary: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            --secondary: #ff7675;
+            --accent: #55efc4;
+            --glass: rgba(255, 255, 255, 0.9);
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         body {
-            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-            background: #eef2f7;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f1f3f6;
             margin: 0;
-            padding: 15px;
+            padding: 10px;
             display: flex;
             justify-content: center;
         }
 
         .app-container {
             width: 100%;
-            max-width: 450px;
+            max-width: 420px;
             background: white;
-            border-radius: 25px;
-            box-shadow: var(--card-shadow);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
             overflow: hidden;
-            position: relative;
         }
 
-        /* 頂部裝飾條與語言切換 */
-        .header-bar {
-            background: var(--gradient-primary);
-            padding: 25px 20px;
-            text-align: center;
-            color: white;
-        }
-
-        .lang-toggle {
-            position: absolute;
-            top: 15px;
-            right: 15px;
+        /* 頂部導航與語言 */
+        .top-nav {
+            background: #2a5298;
+            padding: 10px 20px;
             display: flex;
-            background: rgba(255,255,255,0.2);
-            border-radius: 20px;
-            padding: 3px;
+            justify-content: flex-end;
+            gap: 8px;
         }
 
         .lang-btn {
-            border: none;
+            border: 1px solid rgba(255,255,255,0.4);
             background: transparent;
             color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-size: 12px;
-            font-weight: bold;
+            cursor: pointer;
             transition: 0.3s;
         }
 
         .lang-btn.active {
             background: white;
-            color: #764ba2;
+            color: #2a5298;
+            font-weight: bold;
         }
 
-        .form-body {
-            padding: 25px;
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
         }
 
-        h1 {
-            font-size: 1.5rem;
-            margin: 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+        h1 { font-size: 1.4rem; margin: 0; letter-spacing: 1px; }
 
-        .input-group {
+        /* 表單區域 */
+        .content { padding: 20px; }
+
+        .input-card {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 15px;
             margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: var(--text-dark);
-            font-size: 0.95rem;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #444;
+            font-size: 0.9rem;
         }
 
         select, input {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #edf2f7;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
             border-radius: 12px;
             font-size: 16px;
-            background: #fdfdfd;
-            transition: all 0.3s;
+            margin-bottom: 12px;
             box-sizing: border-box;
+            transition: 0.3s;
         }
 
         select:focus, input:focus {
+            border-color: #2a5298;
             outline: none;
-            border-color: #667eea;
             background: white;
-            box-shadow: 0 0 10px rgba(102, 126, 234, 0.1);
         }
 
-        .row {
-            display: flex;
-            gap: 12px;
-        }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-        .row > div { flex: 1; }
-
-        /* 彩色按鈕 */
+        /* 按鈕 */
         .calc-btn {
             width: 100%;
             padding: 16px;
+            background: var(--primary);
+            color: white;
             border: none;
             border-radius: 15px;
-            background: var(--gradient-primary);
-            color: white;
-            font-size: 18px;
+            font-size: 1.1rem;
             font-weight: bold;
+            box-shadow: 0 6px 20px rgba(42, 82, 152, 0.3);
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .calc-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.2);
-        }
-
-        /* 結果區 - 漸層背景 */
-        .result-box {
+        /* 結果顯示 */
+        .result-panel {
             margin-top: 25px;
-            padding: 20px;
             border-radius: 20px;
-            background: #f0f3ff;
-            border-left: 6px solid #667eea;
+            background: linear-gradient(to bottom, #ffffff, #f0f7ff);
+            border: 2px solid #ddecff;
+            padding: 15px;
             display: none;
-            animation: slideUp 0.4s ease-out;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .res-item {
+        .res-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 10px 0;
+            border-bottom: 1px solid #eef2f7;
         }
 
-        .res-label { font-weight: 500; color: #555; }
-        .res-val { font-weight: 800; color: #764ba2; font-size: 1.1rem; }
+        .res-label { color: #666; font-size: 0.9rem; }
+        .res-val { color: #2a5298; font-weight: 800; font-size: 1.1rem; }
 
-        /* 數據表格美化 */
-        .info-card {
-            background: #fcfcfc;
-            padding: 20px;
+        /* 參考表 */
+        .table-section {
+            padding: 0 20px 20px;
             font-size: 0.8rem;
-            border-top: 1px solid #eee;
         }
 
         table {
             width: 100%;
-            border-radius: 10px;
-            overflow: hidden;
             border-collapse: collapse;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        th {
-            background: #764ba2;
-            color: white;
+        th { background: #eef2f7; color: #333; padding: 10px; }
+        td { background: white; padding: 8px; text-align: center; border: 1px solid #f1f1f1; }
+
+        .formula-box {
+            background: #fff5f5;
+            border-radius: 10px;
             padding: 10px;
-        }
-
-        td {
-            padding: 8px;
-            text-align: center;
-            background: white;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .highlight-row { background: #fdf9f0; }
-
-        .footer-tag {
-            display: inline-block;
             margin-top: 15px;
-            padding: 4px 10px;
-            background: var(--gradient-accent);
-            border-radius: 8px;
-            font-weight: bold;
-            color: #fff;
+            color: #d63031;
+            font-size: 0.75rem;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div class="lang-toggle">
-        <button class="lang-btn active" id="btn-zh" onclick="setLang('zh')">中</button>
-        <button class="lang-btn" id="btn-vi" onclick="setLang('vi')">VN</button>
+    <div class="top-nav">
+        <button class="lang-btn active" id="btn-zh" onclick="switchL('zh')">繁體中文</button>
+        <button class="lang-btn" id="btn-vi" onclick="switchL('vi')">Tiếng Việt</button>
     </div>
 
-    <div class="header-bar">
-        <h1 id="ui-title">回收料比例計算器</h1>
-    </div>
+    <header>
+        <h1 id="txt-title">回收料比例計算器</h1>
+    </header>
 
-    <div class="form-body">
-        <div class="row">
-            <div class="input-group">
-                <label id="ui-l-machine">機型選擇</label>
-                <select id="machine">
-                    <option value="DH-901">DH-901</option>
-                    <option value="DH-904">DH-904</option>
-                </select>
+    <div class="content">
+        <div class="input-card">
+            <div class="grid">
+                <div>
+                    <label id="txt-m-label">機型</label>
+                    <select id="machine">
+                        <option value="DH-901">DH-901</option>
+                        <option value="DH-904">DH-904</option>
+                    </select>
+                </div>
+                <div>
+                    <label id="txt-mat-label">材料</label>
+                    <select id="material">
+                        <option value="chip">CHIP</option>
+                        <option value="flake">Flake</option>
+                    </select>
+                </div>
             </div>
-            <div class="input-group">
-                <label id="ui-l-material">材料</label>
-                <select id="material">
-                    <option value="chip">CHIP</option>
-                    <option value="flake">Flake</option>
-                </select>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="input-group">
-                <label id="ui-l-virgin">原生重量(kg)</label>
-                <input type="number" id="vWeight" placeholder="0.0">
-            </div>
-            <div class="input-group">
-                <label id="ui-l-recycled">回收重量(kg)</label>
-                <input type="number" id="rWeight" placeholder="0.0">
-            </div>
-        </div>
+            <label id="txt-v-label">原生材料重量 (kg)</label>
+            <input type="number" id="vWeight" placeholder="0.00" step="0.01">
 
-        <div class="input-group">
-            <label id="ui-l-load">下料百分比 (%)</label>
-            <select id="loadPercent" onchange="checkCustom()">
+            <label id="txt-r-label">回收材料重量 (kg)</label>
+            <input type="number" id="rWeight" placeholder="0.00" step="0.01">
+
+            <label id="txt-l-label">下料百分比 (%)</label>
+            <select id="load" onchange="toggleC()">
                 <option value="90">90%</option>
                 <option value="85">85%</option>
                 <option value="80">80%</option>
@@ -258,148 +213,114 @@
                 <option value="60">60%</option>
                 <option value="custom">自定義 / Tùy chỉnh</option>
             </select>
-            <input type="number" id="customInput" style="display:none; margin-top:10px;" placeholder="輸入 1-100">
+            <input type="number" id="custom" style="display:none;" placeholder="1-100">
         </div>
 
-        <button class="calc-btn" onclick="calculate()" id="ui-btn">計算結果 / TÍNH TOÁN</button>
+        <button class="calc-btn" onclick="run()" id="txt-btn">開始計算 / TÍNH TOÁN</button>
 
-        <div id="results" class="result-box">
-            <div class="res-item">
-                <span id="ui-r-ratio">回收比例</span>
-                <span class="res-val" id="res-ratio">-</span>
-            </div>
-            <div class="res-item">
-                <span id="ui-r-freq">所需頻率</span>
-                <span class="res-val" id="res-freq">-</span>
-            </div>
-            <div class="res-item">
-                <span id="ui-r-total">總重</span>
-                <span class="res-val" id="res-total">-</span>
-            </div>
-            <div class="res-item">
-                <span id="ui-r-cap">估計產能</span>
-                <span class="res-val" id="res-cap">-</span>
-            </div>
+        <div id="res-panel" class="result-panel">
+            <div class="res-row"><span id="txt-res-1">回收比例</span><span class="res-val" id="r-ratio">-</span></div>
+            <div class="res-row"><span id="txt-res-2">所需頻率</span><span class="res-val" id="r-freq">-</span></div>
+            <div class="res-row"><span id="txt-res-3">總重量</span><span class="res-val" id="r-total">-</span></div>
+            <div class="res-row"><span id="txt-res-4">估計產能</span><span class="res-val" id="r-cap">-</span></div>
         </div>
     </div>
 
-    <div class="info-card">
-        <table id="dataTable">
-            </table>
-        <div class="footer-tag" id="ui-note">
-            CHIP: 23.04 | Flake: 14.58
+    <div class="table-section">
+        <table>
+            <thead>
+                <tr><th colspan="2">DH-901</th><th colspan="2">DH-904</th></tr>
+                <tr><th>Hz</th><th>%</th><th>Hz</th><th>%</th></tr>
+            </thead>
+            <tbody id="tb"></tbody>
+        </table>
+        
+        <div class="formula-box">
+            <strong>Formula Reference:</strong><br>
+            • Ratio (%) = (Recycled / Total) × 100<br>
+            • Capacity = Total × (CHIP: 23.04 / Flake: 14.58)
         </div>
     </div>
 </div>
 
 <script>
-    const langData = {
+    const dictionary = {
         zh: {
-            title: "回收料比例計算器",
-            machine: "機型選擇", material: "材料",
-            virgin: "原生重量 (kg)", recycled: "回收重量 (kg)",
-            load: "下料百分比 (%)", btn: "開始計算",
-            r1: "回收比例", r2: "所需頻率 (Hz)", r3: "總重量 (kg)", r4: "估計產能",
-            alert: "請輸入完整數值"
+            title: "回收料比例計算器", m: "機型", mat: "材料", v: "原生材料重量 (kg)", r: "回收材料重量 (kg)", 
+            l: "下料百分比 (%)", btn: "開始計算", res1: "回收比例", res2: "所需頻率 (Hz)", res3: "總重量 (kg)", 
+            res4: "估計產能", err: "請輸入正確數值"
         },
         vi: {
-            title: "Máy Tính Tỷ Lệ Tái Chế",
-            machine: "Loại máy", material: "Nguyên liệu",
-            virgin: "Trọng lượng NS (kg)", recycled: "Trọng lượng TC (kg)",
-            load: "Tỷ lệ nạp (%)", btn: "TÍNH TOÁN",
-            r1: "Tỷ lệ tái chế", r2: "Tần số (Hz)", r3: "Tổng trọng lượng", r4: "Công suất",
-            alert: "Vui lòng nhập đầy đủ thông tin"
+            title: "Máy Tính Tỷ Lệ Tái Chế", m: "Loại máy", mat: "Vật liệu", v: "Trọng lượng NS (kg)", r: "Trọng lượng TC (kg)", 
+            l: "Tỷ lệ nạp (%)", btn: "TÍNH TOÁN", res1: "Tỷ lệ tái chế", res2: "Tần số (Hz)", res3: "Tổng trọng lượng", 
+            res4: "Công suất", err: "Vui lòng nhập số hợp lệ"
         }
     };
 
-    let curLang = 'zh';
+    let cur = 'zh';
 
-    function setLang(lang) {
-        curLang = lang;
-        document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
-        document.getElementById('btn-vi').classList.toggle('active', lang === 'vi');
-        
-        const d = langData[lang];
-        document.getElementById('ui-title').innerText = d.title;
-        document.getElementById('ui-l-machine').innerText = d.machine;
-        document.getElementById('ui-l-material').innerText = d.material;
-        document.getElementById('ui-l-virgin').innerText = d.virgin;
-        document.getElementById('ui-l-recycled').innerText = d.recycled;
-        document.getElementById('ui-l-load').innerText = d.load;
-        document.getElementById('ui-btn').innerText = d.btn;
-        document.getElementById('ui-r-ratio').innerText = d.r1;
-        document.getElementById('ui-r-freq').innerText = d.r2;
-        document.getElementById('ui-r-total').innerText = d.r3;
-        document.getElementById('ui-r-cap').innerText = d.r4;
-        renderTable();
+    function switchL(l) {
+        cur = l;
+        document.getElementById('btn-zh').className = l === 'zh' ? 'lang-btn active' : 'lang-btn';
+        document.getElementById('btn-vi').className = l === 'vi' ? 'lang-btn active' : 'lang-btn';
+        const d = dictionary[l];
+        document.getElementById('txt-title').innerText = d.title;
+        document.getElementById('txt-m-label').innerText = d.m;
+        document.getElementById('txt-mat-label').innerText = d.mat;
+        document.getElementById('txt-v-label').innerText = d.v;
+        document.getElementById('txt-r-label').innerText = d.r;
+        document.getElementById('txt-l-label').innerText = d.l;
+        document.getElementById('txt-btn').innerText = d.btn;
+        document.getElementById('txt-res-1').innerText = d.res1;
+        document.getElementById('txt-res-2').innerText = d.res2;
+        document.getElementById('txt-res-3').innerText = d.res3;
+        document.getElementById('txt-res-4').innerText = d.res4;
     }
 
-    function checkCustom() {
-        const isCustom = document.getElementById('loadPercent').value === 'custom';
-        document.getElementById('customInput').style.display = isCustom ? 'block' : 'none';
+    function toggleC() {
+        document.getElementById('custom').style.display = document.getElementById('load').value === 'custom' ? 'block' : 'none';
     }
 
-    function renderTable() {
-        const html = `
-            <thead>
-                <tr><th colspan="2">DH-901</th><th colspan="2">DH-904</th></tr>
-                <tr><th>Hz</th><th>%</th><th>Hz</th><th>%</th></tr>
-            </thead>
-            <tbody>
-                <tr><td>40</td><td>90%</td><td>7.00</td><td>10%</td></tr>
-                <tr class="highlight-row"><td>40</td><td>85%</td><td>11.15</td><td>15%</td></tr>
-                <tr><td>40</td><td>80%</td><td>15.80</td><td>20%</td></tr>
-                <tr class="highlight-row"><td>40</td><td>75%</td><td>21.00</td><td>25%</td></tr>
-                <tr><td>40</td><td>70%</td><td>17.09</td><td>30%</td></tr>
-                <tr class="highlight-row"><td>40</td><td>65%</td><td>34.03</td><td>35%</td></tr>
-                <tr><td>40</td><td>60%</td><td>42.14</td><td>40%</td></tr>
-            </tbody>`;
-        document.getElementById('dataTable').innerHTML = html;
-    }
-
-    function calculate() {
+    function run() {
         const v = parseFloat(document.getElementById('vWeight').value);
         const r = parseFloat(document.getElementById('rWeight').value);
-        let lp = document.getElementById('loadPercent').value;
-        if(lp === 'custom') lp = document.getElementById('customInput').value;
+        let lp = document.getElementById('load').value;
+        if(lp === 'custom') lp = document.getElementById('custom').value;
         lp = parseFloat(lp);
 
-        if(isNaN(v) || isNaN(r) || isNaN(lp)) {
-            alert(langData[curLang].alert);
-            return;
-        }
+        if(isNaN(v) || isNaN(r) || isNaN(lp)) { alert(dictionary[cur].err); return; }
 
         const total = v + r;
         const ratio = (r / total) * 100;
-        const machine = document.getElementById('machine').value;
+        const mach = document.getElementById('machine').value;
         const mat = document.getElementById('material').value;
-        const matVal = (mat === 'chip') ? 23.04 : 14.58;
+        const factor = mat === 'chip' ? 23.04 : 14.58;
 
-        let freq = 40;
-        if(machine === 'DH-904') {
-            const map = [{p:10,f:7},{p:15,f:11.15},{p:20,f:15.8},{p:25,f:21},{p:30,f:17.09},{p:35,f:34.03},{p:40,f:42.14}];
-            if(lp <= 10) freq = 7;
-            else if(lp >= 40) freq = 42.14;
+        let hz = 40;
+        if(mach === 'DH-904') {
+            const data = [{p:10,h:7},{p:15,h:11.15},{p:20,h:15.8},{p:25,h:21},{p:30,h:17.09},{p:35,h:34.03},{p:40,h:42.14}];
+            if(lp <= 10) hz = 7;
+            else if(lp >= 40) hz = 42.14;
             else {
-                for(let i=0; i<map.length-1; i++){
-                    if(lp >= map[i].p && lp <= map[i+1].p){
-                        let l = map[i], u = map[i+1];
-                        freq = l.f + (u.f - l.f) * (lp - l.p) / (u.p - l.p);
+                for(let i=0; i<data.length-1; i++){
+                    if(lp >= data[i].p && lp <= data[i+1].p){
+                        hz = data[i].h + (data[i+1].h - data[i].h) * (lp - data[i].p) / (data[i+1].p - data[i].p);
                         break;
                     }
                 }
             }
         }
 
-        document.getElementById('res-ratio').innerText = ratio.toFixed(2) + ' %';
-        document.getElementById('res-freq').innerText = freq.toFixed(2) + ' Hz';
-        document.getElementById('res-total').innerText = total.toFixed(2) + ' kg';
-        document.getElementById('res-cap').innerText = (total * matVal).toFixed(2);
-        document.getElementById('results').style.display = 'block';
+        document.getElementById('r-ratio').innerText = ratio.toFixed(2) + ' %';
+        document.getElementById('r-freq').innerText = hz.toFixed(2) + ' Hz';
+        document.getElementById('r-total').innerText = total.toFixed(2) + ' kg';
+        document.getElementById('r-cap').innerText = (total * factor).toFixed(2);
+        document.getElementById('res-panel').style.display = 'block';
     }
 
-    setLang('zh');
+    const rows = [[40,90,7,10],[40,85,11.15,15],[40,80,15.8,20],[40,75,21,25],[40,70,17.09,30],[40,65,34.03,35],[40,60,42.14,40]];
+    document.getElementById('tb').innerHTML = rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}%</td><td>${r[2]}</td><td>${r[3]}%</td></tr>`).join('');
+    switchL('zh');
 </script>
-
 </body>
 </html>
